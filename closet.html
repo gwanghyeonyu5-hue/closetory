@@ -969,7 +969,7 @@
 
         const desc = document.createElement('p');
         desc.className = 'clo-card-desc';
-        desc.textContent = item.description || '코디 설명이 아직 없습니다.';
+        desc.textContent = item.description || item.desc || '코디 설명이 아직 없습니다.';
         body.appendChild(desc);
 
         const footer = document.createElement('div');
@@ -1032,11 +1032,14 @@
     const detailImgEl     = document.getElementById('detailImg');
 
     function openDetailModal(item) {
+
+        console.log("DETAIL ITEM →", item);
+
       detailTitleEl.textContent = item.title || '코디 상세 정보';
       // 상세 이미지 표시 (전체 보이는 스타일)
-const detailImageEl = document.getElementById('detailImage');
-detailImageEl.src = item.imageUrl || "";
-detailImageEl.alt = item.title || "코디 이미지";
+        const detailImageEl = document.getElementById('detailImage');
+        detailImageEl.src = item.imageUrl || "";
+        detailImageEl.alt = item.title || "코디 이미지";
       detailMetaEl.textContent  = formatDate(item.createdAt) || '날짜 정보 없음';
 
       // 상단 큰 이미지 세팅
@@ -1059,51 +1062,19 @@ detailImageEl.alt = item.title || "코디 이미지";
         detailTagsEl.appendChild(pill);
       });
 
-      detailDescEl.textContent = item.description || '코디 설명이 등록되지 않았습니다.';
+      detailDescEl.textContent = item.description || item.desc || '코디 설명이 등록되지 않았습니다.';
 
-      // 스타일 분석 (간단 룰 기반)
-      detailStyleListEl.innerHTML = '';
-      const styleHints = [];
+      // ⭐ 여기에 추가해야 함!!!
+     detailStyleListEl.innerHTML =
+    `<li>${item.style || "스타일 분석 정보가 없습니다."}</li>`;
 
-      if (colors.includes('블랙')) styleHints.push('블랙 비중이 높아 모노톤, 시크한 느낌의 스타일을 선호합니다.');
-      if (colors.includes('화이트')) styleHints.push('화이트가 포함되어 전체적으로 밝고 깨끗한 인상을 줍니다.');
-      if (colors.includes('카키') || colors.includes('브라운')) styleHints.push('어스 계열 색감으로 캐주얼하고 자연스러운 분위기를 연출합니다.');
-      if (tags.includes('운동') || tags.includes('스포츠')) styleHints.push('활동성이 중요해 편안함 중심의 코디를 자주 선택합니다.');
-      if (tags.includes('데이트')) styleHints.push('데이트 상황에서 포인트를 줄 수 있는 감성 코디를 좋아합니다.');
+     detailRecommendListEl.innerHTML =
+    `<li>${item.recommend || "추천 코디 팁이 없습니다."}</li>`;
 
-      if (!styleHints.length) styleHints.push('컬러와 태그 정보가 아직 적어, 기본적인 캐주얼 스타일로 분석됩니다.');
 
-      styleHints.forEach(t => {
-        const li = document.createElement('li');
-        li.textContent = t;
-        detailStyleListEl.appendChild(li);
-      });
 
-      // 추천 코디 팁
-      detailRecommendListEl.innerHTML = '';
-      const reco = [];
 
-      if (colors.includes('블랙') || colors.includes('그레이')) {
-        reco.push('모노톤 코디에는 밝은 컬러 스니커즈나 가방으로 포인트를 추가해 보세요.');
-      }
-      if (colors.includes('브라운') || colors.includes('카키')) {
-        reco.push('브라운/카키 계열에는 아이보리 니트나 셔츠를 매치하면 부드러운 느낌을 줄 수 있습니다.');
-      }
-      if (tags.includes('캠퍼스')) {
-        reco.push('캠퍼스 코디에는 백팩 + 캡모자를 함께 매치하면 활동성도 살고 스타일도 살아납니다.');
-      }
-      if (tags.includes('여행')) {
-        reco.push('여행 코디는 레이어드가 중요하니, 가벼운 아우터를 추가로 챙겨 두면 온도 변화에 대처하기 좋습니다.');
-      }
-      if (!reco.length) {
-        reco.push('현재 코디에 머플러나 악세서리를 한 가지 추가하면, 분위기를 완전히 바꿀 수 있어요.');
-      }
 
-      reco.forEach(t => {
-        const li = document.createElement('li');
-        li.textContent = t;
-        detailRecommendListEl.appendChild(li);
-      });
 
       modalEl.classList.add('show');
     }
